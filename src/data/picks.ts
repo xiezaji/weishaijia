@@ -1,5 +1,5 @@
 import { getCanteen, priceRangeOf } from './catalog'
-import { amapUrl, distanceLabel, type NearbyShop } from './nearby'
+import { distanceLabel, type NearbyShop } from './nearby'
 import type { Window } from './types'
 import { floorLabel, floorName, formatRange } from '../utils/format'
 
@@ -9,7 +9,6 @@ export interface PickItem {
   meta: string
   tags: string[]
   href: string
-  external: boolean
   score: number | null
 }
 
@@ -24,7 +23,6 @@ export function windowPick(win: Window): PickItem {
       .join(' · '),
     tags: win.tags,
     href: `/canteen/${win.canteenId}/window/${win.id}`,
-    external: false,
     score: null,
   }
 }
@@ -35,8 +33,7 @@ export function shopPick(shop: NearbyShop): PickItem {
     name: shop.name,
     meta: `校外 · ${shop.category} · ${distanceLabel(shop.distance)} · 人均 ¥${shop.avgPrice}`,
     tags: shop.tags,
-    href: amapUrl(shop),
-    external: true,
+    href: `/shop/${shop.id}`,
     score: shop.score,
   }
 }

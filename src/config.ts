@@ -5,6 +5,7 @@ export const APP = {
   subtitle: '山东大学（威海）食堂窗口目录',
   updatedAt: '2026-10-27',
   feedbackHint: '反馈内容只会复制到剪贴板，不会上传到任何服务器。',
+  reviewFormUrl: '',
   official: {
     name: '食在山大 · 最喜爱窗口榜单',
     org: '山东教育发布',

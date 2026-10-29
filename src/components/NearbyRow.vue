@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { amapUrl, distanceLabel, type NearbyShop } from '../data/nearby'
+import { distanceLabel, type NearbyShop } from '../data/nearby'
 import AppIcon from './AppIcon.vue'
 
 defineProps<{ shop: NearbyShop }>()
 </script>
 
 <template>
-  <a class="nrow" :href="amapUrl(shop)" target="_blank" rel="noopener noreferrer">
+  <RouterLink class="nrow" :to="`/shop/${shop.id}`">
     <span class="nrow-score num">{{ shop.score.toFixed(1) }}</span>
     <span class="nrow-main">
       <b>{{ shop.name }}</b>
@@ -16,6 +16,6 @@ defineProps<{ shop: NearbyShop }>()
       <b class="num">{{ distanceLabel(shop.distance) }}</b>
       <small class="num">¥{{ shop.avgPrice }}/人</small>
     </span>
-    <AppIcon name="external" :size="13" class="nrow-icon" />
-  </a>
+    <AppIcon name="chevron" :size="13" class="nrow-icon" />
+  </RouterLink>
 </template>

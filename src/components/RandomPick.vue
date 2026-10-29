@@ -40,17 +40,7 @@ function roll(): void {
         <p class="pick-meta">{{ picked.meta }}</p>
         <div class="pick-foot">
           <span class="pick-tags">{{ picked.tags.join(' / ') }}</span>
-          <a
-            v-if="picked.external"
-            class="pick-go"
-            :href="picked.href"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            去高德看看
-            <AppIcon name="external" :size="13" />
-          </a>
-          <RouterLink v-else class="pick-go" :to="picked.href">
+          <RouterLink class="pick-go" :to="picked.href">
             去看看
             <AppIcon name="arrow" :size="14" />
           </RouterLink>

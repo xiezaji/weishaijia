@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
 import { APP } from '../config'
 import {
   canteens,
@@ -9,24 +8,14 @@ import {
   rankedWindowsOf,
   windowsOf,
 } from '../data/catalog'
-import { emptyFilters, filterNearby, filterWindows } from '../data/filters'
 import type { Canteen, CanteenId, Window } from '../data/types'
-import { shopPick, windowPick, type PickItem } from '../data/picks'
 import { floorLabel, formatRange } from '../utils/format'
 import { usePageTitle } from '../composables/usePageTitle'
 import AppIcon from '../components/AppIcon.vue'
 import PlateStrip from '../components/PlateStrip.vue'
 import NearbyStrip from '../components/NearbyStrip.vue'
-import WindowFilter from '../components/WindowFilter.vue'
-import RandomPick from '../components/RandomPick.vue'
 
 usePageTitle(() => '山威食堂窗口目录')
-
-const filters = ref(emptyFilters())
-const outside = computed(() => filters.value.place === 'outside')
-const pool = computed<PickItem[]>(() =>
-  outside.value ? filterNearby(filters.value).map(shopPick) : filterWindows(filters.value).map(windowPick),
-)
 
 const top = canteens
   .map((canteen) => rankedWindowsOf(canteen.id)[0])
@@ -66,14 +55,6 @@ function rangeOf(win: Window): string {
     </section>
 
     <PlateStrip />
-
-    <section class="home-sec home-pick" aria-labelledby="pick-title">
-      <header class="home-sec-head">
-        <h2 id="pick-title">这顿吃啥</h2>
-      </header>
-      <WindowFilter v-model="filters" />
-      <RandomPick :pool="pool" />
-    </section>
 
     <section class="home-sec">
       <header class="home-sec-head">

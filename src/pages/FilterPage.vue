@@ -16,6 +16,7 @@ usePageTitle(() => '筛选')
 
 const filters = ref(emptyFilters())
 const outside = computed(() => filters.value.place === 'outside')
+const showShops = computed(() => outside.value || filters.value.place === 'all')
 
 const matches = computed(() =>
   outside.value
@@ -31,11 +32,15 @@ const matches = computed(() =>
         ),
 )
 
-const shops = computed(() => (outside.value ? filterNearby(filters.value) : []))
+const shops = computed(() => (showShops.value ? filterNearby(filters.value) : []))
 const pool = computed<PickItem[]>(() =>
-  outside.value ? shops.value.map(shopPick) : matches.value.map(windowPick),
+  outside.value
+    ? shops.value.map(shopPick)
+    : filters.value.place === 'all'
+      ? [...matches.value.map(windowPick), ...shops.value.map(shopPick)]
+      : matches.value.map(windowPick),
 )
-const total = computed(() => (outside.value ? shops.value.length : matches.value.length))
+const total = computed(() => matches.value.length + shops.value.length)
 
 const groups = computed(() =>
   canteens
@@ -52,14 +57,23 @@ const groups = computed(() =>
     <header class="fp-head">
       <div class="eyebrow">FILTER</div>
       <h1>按条件挑一家</h1>
-      <p>选地点、人均和品类，再从结果里随机抽一家。地点选「校外」就切到周边高德评分店铺。</p>
+      <p>选地点、人均和品类，再从结果里随机抽一家。地点选「全部」会同时列出校外店铺，选「校外」只看校外。</p>
     </header>
 
     <WindowFilter v-model="filters" />
     <RandomPick :pool="pool" />
 
     <div class="fp-summary">
-      找到 <b class="num">{{ total }}</b> 家{{ outside ? '校外店铺' : '窗口' }}
+      <template v-if="outside">
+        找到 <b class="num">{{ shops.length }}</b> 家校外店铺
+      </template>
+      <template v-else>
+        找到 <b class="num">{{ matches.length }}</b> 家窗口
+        <template v-if="shops.length">
+          <span class="fp-summary-sep" aria-hidden="true">·</span>
+          校外 <b class="num">{{ shops.length }}</b> 家
+        </template>
+      </template>
     </div>
 
     <EmptyState
@@ -70,21 +84,35 @@ const groups = computed(() =>
       "
     />
 
-    <div v-else-if="outside" class="fp-body">
-      <NearbyRow v-for="shop in shops" :key="shop.id" :shop="shop" />
-      <p class="footnote">{{ nearbyMeta.note }}</p>
-    </div>
+    <template v-else>
+      <div v-if="!outside && matches.length" class="fp-body">
+        <template v-for="group in groups" :key="group.canteen.id">
+          <div class="floor-divider">
+            <span>{{ group.canteen.name }}</span>
+            <i aria-hidden="true"></i>
+            <span>{{ group.items.length }}</span>
+          </div>
+          <WindowRow
+            v-for="win in group.items"
+            :key="win.id"
+            :window="win"
+            :canteen="group.canteen"
+          />
+        </template>
+        <p class="footnote">价格区间按窗口在售菜品统计；带「参考」的价格尚未实地核实，以现场为准。</p>
+      </div>
 
-    <div v-else class="fp-body">
-      <template v-for="group in groups" :key="group.canteen.id">
+      <p v-else-if="!outside" class="fp-none">校内没有符合条件的窗口，下面看看校外。</p>
+
+      <div v-if="shops.length" class="fp-body fp-shops">
         <div class="floor-divider">
-          <span>{{ group.canteen.name }}</span>
+          <span>校外美食</span>
           <i aria-hidden="true"></i>
-          <span>{{ group.items.length }}</span>
+          <span>{{ shops.length }}</span>
         </div>
-        <WindowRow v-for="win in group.items" :key="win.id" :window="win" :canteen="group.canteen" />
-      </template>
-      <p class="footnote">价格区间按窗口在售菜品统计；带「参考」的价格尚未实地核实，以现场为准。</p>
-    </div>
+        <NearbyRow v-for="shop in shops" :key="shop.id" :shop="shop" />
+        <p class="footnote">{{ nearbyMeta.note }}</p>
+      </div>
+    </template>
   </div>
 </template>
