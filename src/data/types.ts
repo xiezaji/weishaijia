@@ -30,6 +30,13 @@ export interface Quote {
   url: string
 }
 
+export interface Photo {
+  src: string
+  alt: string
+  credit: string
+  postUrl: string
+}
+
 export interface Window {
   id: string
   canteenId: CanteenId
@@ -49,4 +56,5 @@ export interface Window {
   note?: string
   dishes: Dish[]
   quotes: Quote[]
+  photos?: Photo[]
 }

@@ -12,6 +12,8 @@ import AppIcon from '../components/AppIcon.vue'
 import SectionHead from '../components/SectionHead.vue'
 import DishRow from '../components/DishRow.vue'
 import QuoteCard from '../components/QuoteCard.vue'
+import PhotoGrid from '../components/PhotoGrid.vue'
+import ReviewBlock from '../components/ReviewBlock.vue'
 import EmptyState from '../components/EmptyState.vue'
 import ReportSheet from '../components/ReportSheet.vue'
 
@@ -159,11 +161,23 @@ async function share(): Promise<void> {
       <p class="footnote">带「参考」标记的价格为演示估算，尚未实地核实；所有价格以窗口现场为准。</p>
     </section>
 
-    <section v-if="win!.quotes.length" class="section wsection">
-      <SectionHead eyebrow="VOICES" title="频道口碑" :aside="`${win!.quotes.length} 条`" />
+    <PhotoGrid
+      v-if="win.photos?.length"
+      title="窗口照片"
+      :photos="win.photos"
+    />
+
+    <section class="section wsection">
+      <SectionHead eyebrow="POSTS" title="热门帖子" :aside="win!.quotes.length ? `${win!.quotes.length} 条` : '待补充'" />
       <QuoteCard v-for="quote in win!.quotes" :key="quote.id" :quote="quote" />
+      <div v-if="!win!.quotes.length" class="review-empty">
+        <p class="review-empty-title">还没有收录这家窗口的帖子</p>
+        <p class="review-empty-copy">频道里暂时没有关于这个窗口的分享，之后有原帖会整理到这里。</p>
+      </div>
       <p class="footnote">引文来自腾讯频道公开帖子，已匿名化处理；内容可能过时，仅作参考。</p>
     </section>
+
+    <ReviewBlock :target="win.name" />
 
     <section class="section wsection">
       <SectionHead eyebrow="SOURCE" title="数据来源" />

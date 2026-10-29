@@ -1,5 +1,5 @@
 import { APP } from '../config'
-import type { Canteen, CanteenId, Dish, Quote, Window } from './types'
+import type { Canteen, CanteenId, Dish, Photo, Quote, Window } from './types'
 
 const CHANNEL = '腾讯频道 · 小黄鸭星球'
 const OFFICIAL = {
@@ -16,6 +16,11 @@ const URL_EGG = 'https://pd.qq.com/g/SduwerHome1/post/B_1803e06ab2e8010014411521
 const URL_RICEBALL = 'https://pd.qq.com/g/SduwerHome1/post/B_383c296a5db506001441152186940187750X60'
 const URL_DUCKLEG = 'https://pd.qq.com/g/SduwerHome1/post/B_6ef6cd69844707001441152186684196510X60'
 const URL_ROASTDUCK = 'https://pd.qq.com/g/SduwerHome1/post/B_6f12df6909470a001441152195892152150X60'
+const URL_BURGER = 'https://pd.qq.com/g/SduwerHome1/post/B_1919c76a0cbc0c001441152196015403690X60'
+const URL_DOUHUA = 'https://pd.qq.com/g/SduwerHome1/post/B_178fd56a5f410c001441152191438457840X60'
+const URL_DUCKPHOTO = 'https://pd.qq.com/g/SduwerHome1/post/B_126b1a6a6fdc08001441152191968479980X60'
+
+const IMG = `${import.meta.env.BASE_URL}img/channel/`
 
 function dish(
   id: string,
@@ -29,6 +34,10 @@ function dish(
 
 function quote(id: string, text: string, url: string, date: string): Quote {
   return { id, text, platform: CHANNEL, date, url }
+}
+
+function photo(file: string, alt: string, postUrl: string, credit: string): Photo {
+  return { src: `${IMG}${file}`, alt, credit, postUrl }
 }
 
 export const canteens: Canteen[] = [
@@ -151,6 +160,14 @@ export const windows: Window[] = [
       dish('xy-happy-2', '薯条', '小食', 8, { estimated: true }),
     ],
     quotes: [],
+    photos: [
+      photo(
+        'burger.webp',
+        '芝士土豆泥汉堡，双层肉饼和煎蛋',
+        URL_BURGER,
+        '频道帖 · 馨园快乐星',
+      ),
+    ],
   },
   {
     id: 'xy-noodle',
@@ -372,6 +389,14 @@ export const windows: Window[] = [
         '10 月',
       ),
     ],
+    photos: [
+      photo(
+        'riceball.webp',
+        '食堂不锈钢餐盘：煎蛋、青菜、鸡块和紫米饭',
+        URL_RICEBALL,
+        '频道帖 · 雀园自选',
+      ),
+    ],
   },
 
   {
@@ -436,6 +461,14 @@ export const windows: Window[] = [
     addedAt: '2025',
     dishes: [dish('ty-douhua-1', '豆花捞饭', '捞饭', 12, { estimated: true })],
     quotes: [],
+    photos: [
+      photo(
+        'douhua.webp',
+        '不锈钢碗里的冒豆花，豆花、肉卷、青菜和红汤',
+        URL_DOUHUA,
+        '频道帖 · 泰园三楼',
+      ),
+    ],
   },
   {
     id: 'ty-lamian',
@@ -518,6 +551,14 @@ export const windows: Window[] = [
         '周末还送雪碧可乐的不知道现在还送么，米饭还畅吃。',
         URL_ROASTDUCK,
         '10 月',
+      ),
+    ],
+    photos: [
+      photo(
+        'roastduck.webp',
+        '烧鸭饭配青菜和咸鸭蛋',
+        URL_DUCKPHOTO,
+        '频道帖 · 泰园三楼',
       ),
     ],
   },
