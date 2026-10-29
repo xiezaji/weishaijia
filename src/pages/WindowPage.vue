@@ -162,9 +162,10 @@ async function share(): Promise<void> {
     </section>
 
     <PhotoGrid
-      v-if="win.photos?.length"
       title="窗口照片"
-      :photos="win.photos"
+      :photos="win.photos ?? []"
+      empty-title="还没有窗口照片"
+      empty-copy="只收录画面中没有人物的实拍，并附原帖链接；这家窗口暂时没有可用照片。"
     />
 
     <section class="section wsection">
